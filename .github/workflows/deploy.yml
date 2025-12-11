@@ -3,7 +3,7 @@ name: Deploy Configs to GitHub Pages
 on:
   # 每15分钟执行一次（测试用）
   schedule:
-    - cron: "*/3 * * * *"
+    - cron: "*/2 * * * *"
   # 允许手动触发
   workflow_dispatch:
 
@@ -28,6 +28,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run script to generate configs
+        env:
+          # 设置时区为北京时间
+          TZ: Asia/Shanghai
         run: python tututututut53.py
 
       - name: Deploy to GitHub Pages
