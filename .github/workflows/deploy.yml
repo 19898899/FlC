@@ -1,11 +1,28 @@
 name: Deploy Configs to GitHub Pages
 
 on:
-  # 改为每小时执行一次（避免过于频繁）
+  # 每15分钟执行一次（测试阶段推荐）
   schedule:
-    - cron: "0 * * * *"  # 每小时整点执行
-  # 允许手动触发
+    - cron: "*/15 * * * *"  # 每15分钟执行一次
+  
+  # 允许手动触发（支持分支选择）
   workflow_dispatch:
+    inputs:
+      branch:
+        description: '要部署的分支'
+        required: true
+        default: 'main'
+        type: choice
+        options:
+          - main
+          - master
+          - develop
+      force_refresh:
+        description: '强制重新生成'
+        required: false
+        default: false
+        type: boolean
+  
   # 添加push触发，当相关文件变化时自动执行
   push:
     branches: [ main, master ]
@@ -23,65 +40,161 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 获取完整git历史
+          fetch-depth: 0
+          # 如果手动触发，使用输入的分支
+          ref: ${{ github.event.inputs.branch || github.ref }}
+
+      - name: Show workflow info
+        run: |
+          echo "=== 工作流信息 ==="
+          echo "触发方式: ${{ github.event_name }}"
+          echo "触发分支: ${{ github.ref }}"
+          echo "触发时间: $(date)"
+          echo "手动触发参数:"
+          echo "  分支: ${{ github.event.inputs.branch || '未指定' }}"
+          echo "  强制刷新: ${{ github.event.inputs.force_refresh || '未指定' }}"
+          echo "工作流ID: ${{ github.run_id }}"
+          echo "运行编号: ${{ github.run_number }}"
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: "pip"
+          cache-dependency-path: '**/requirements.txt'
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip setuptools wheel
           if [ -f requirements.txt ]; then
+            echo "正在安装依赖..."
             pip install -r requirements.txt
+            echo "已安装的包:"
+            pip list
           else
-            echo "requirements.txt not found"
+            echo "⚠️ requirements.txt 不存在，跳过依赖安装"
           fi
 
-      - name: Debug environment info
+      - name: Create environment info file
         run: |
-          echo "=== 环境信息 ==="
-          echo "Python版本: $(python --version)"
-          echo "工作目录: $(pwd)"
-          echo "UTC时间: $(date -u)"
-          echo "文件列表:"
-          ls -la
-          echo "=== requirements.txt 内容 ==="
-          if [ -f requirements.txt ]; then
-            cat requirements.txt
-          fi
+          echo "生成环境信息..."
+          python -c "
+import sys, os, platform, datetime, json, subprocess, pkg_resources
+
+info = {
+    'python': {
+        'version': sys.version,
+        'executable': sys.executable,
+        'path': sys.path
+    },
+    'system': {
+        'platform': platform.platform(),
+        'machine': platform.machine(),
+        'processor': platform.processor()
+    },
+    'time': {
+        'utc': str(datetime.datetime.utcnow()),
+        'local': str(datetime.datetime.now()),
+        'timezone': str(datetime.datetime.now().astimezone().tzinfo)
+    },
+    'github': {
+        'event': '${{ github.event_name }}',
+        'ref': '${{ github.ref }}',
+        'sha': '${{ github.sha }}',
+        'run_id': '${{ github.run_id }}'
+    }
+}
+
+# 获取已安装包
+try:
+    installed_packages = [str(pkg) for pkg in pkg_resources.working_set]
+    info['packages'] = installed_packages[:20]  # 只显示前20个
+except:
+    info['packages'] = '无法获取包信息'
+
+print(json.dumps(info, indent=2, ensure_ascii=False))
+          " > environment_info.json
+          
+          echo "环境信息已保存到 environment_info.json"
 
       - name: Run script to generate configs
         env:
-          TZ: "UTC"  # 设置时区为UTC
-          PYTHONUNBUFFERED: "1"  # 实时输出日志
+          TZ: "UTC"
+          PYTHONUNBUFFERED: "1"
+          FORCE_REFRESH: ${{ github.event.inputs.force_refresh || 'false' }}
         run: |
           echo "开始执行配置生成脚本..."
-          python -c "
-import sys
-import datetime
-print(f'Python版本: {sys.version}')
-print(f'当前UTC时间: {datetime.datetime.utcnow()}')
-print(f'当前本地时间: {datetime.datetime.now()}')
-          "
+          echo "环境变量:"
+          echo "  TZ=$TZ"
+          echo "  FORCE_REFRESH=$FORCE_REFRESH"
+          
+          # 记录脚本开始时间
+          START_TIME=$(date +%s)
+          
+          # 执行你的脚本
           python tututututut53.py
-          echo "脚本执行完成"
+          
+          # 记录结束时间
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - START_TIME))
+          
+          echo "✅ 脚本执行完成"
+          echo "⏱️  执行耗时: ${DURATION}秒"
 
       - name: Verify generated files
         run: |
           echo "=== 检查生成的文件 ==="
           if [ -d "./docs" ]; then
-            echo "docs目录存在，内容如下:"
-            find ./docs -type f | head -20
-            echo "文件数量: $(find ./docs -type f | wc -l)"
-            # 显示文件修改时间
-            echo "最新文件:"
-            find ./docs -type f -exec ls -la {} \; | sort -k6,7 | tail -5
+            echo "✅ docs目录存在"
+            echo "📁 目录结构:"
+            find ./docs -type f -name "*.json" -o -name "*.txt" -o -name "*.yaml" -o -name "*.yml" | head -30
+            
+            echo ""
+            echo "📊 统计信息:"
+            echo "总文件数: $(find ./docs -type f | wc -l)"
+            echo "JSON文件数: $(find ./docs -type f -name "*.json" | wc -l)"
+            echo "目录大小: $(du -sh ./docs | cut -f1)"
+            
+            echo ""
+            echo "📅 最新修改的5个文件:"
+            find ./docs -type f -exec ls -la {} \; | sort -k6,7 -r | head -5
+            
+            # 显示一些示例文件内容（前几行）
+            echo ""
+            echo "📄 示例文件内容预览:"
+            SAMPLE_FILE=$(find ./docs -type f -name "*.json" | head -1)
+            if [ -n "$SAMPLE_FILE" ]; then
+              echo "文件: $SAMPLE_FILE"
+              head -5 "$SAMPLE_FILE"
+            fi
           else
-            echo "错误: docs目录不存在!"
+            echo "❌ 错误: docs目录不存在!"
+            echo "当前目录内容:"
+            ls -la
             exit 1
+          fi
+
+      - name: Prepare for deployment
+        run: |
+          echo "准备部署..."
+          # 创建README文件（可选）
+          cat > ./docs/README.md << EOF
+          # 自动生成的配置文件
+          
+          这些配置文件由 GitHub Actions 自动生成。
+          
+          - 最后更新: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
+          - 触发方式: ${{ github.event_name }}
+          - 工作流ID: ${{ github.run_id }}
+          - 仓库: ${{ github.repository }}
+          - 分支: ${{ github.ref_name }}
+          
+          生成脚本: tututututut53.py
+          EOF
+          
+          # 复制环境信息到docs目录
+          if [ -f environment_info.json ]; then
+            cp environment_info.json ./docs/environment_info.json
           fi
 
       - name: Deploy to GitHub Pages
@@ -90,18 +203,44 @@ print(f'当前本地时间: {datetime.datetime.now()}')
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
           publish_branch: gh-pages
-          # 使用实际时间作为提交信息
-          commit_message: "Update configs - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
-          # 保留提交历史，便于调试
+          commit_message: |
+            Update configs
+            - Time: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
+            - Workflow: ${{ github.workflow }} #${{ github.run_id }}
+            - Trigger: ${{ github.event_name }}
+            - Branch: ${{ github.ref_name }}
           force_orphan: false
           user_name: "github-actions[bot]"
           user_email: "github-actions[bot]@users.noreply.github.com"
-          # 允许空提交（如果没有变化）
           allow_empty_commit: true
+          # 添加标签，便于识别
+          tag_name: "v$(date +%Y%m%d-%H%M%S)"
+          tag_message: "Auto-deploy from workflow"
 
-      - name: Verify deployment
+      - name: Summary
         run: |
-          echo "部署完成!"
-          echo "部署时间: $(date -u)"
-          echo "你可以通过以下URL访问:"
-          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
+          echo "========================================"
+          echo "✅ 部署完成!"
+          echo "========================================"
+          echo "📅 部署时间: $(date -u)"
+          echo "🔗 访问地址: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
+          echo "📊 生成文件数: $(find ./docs -type f 2>/dev/null | wc -l || echo '未知')"
+          echo "📁 GitHub Pages分支: gh-pages"
+          echo "🔄 触发方式: ${{ github.event_name }}"
+          echo "🏷️  本次提交标签: v$(date +%Y%m%d-%H%M%S)"
+          echo ""
+          echo "🔍 后续操作:"
+          echo "1. 访问上面的URL查看部署结果"
+          echo "2. 查看Actions日志: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          echo "3. 查看gh-pages分支: https://github.com/${{ github.repository }}/tree/gh-pages"
+          echo "========================================"
+
+      - name: Create deployment status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ 工作流执行成功"
+          else
+            echo "❌ 工作流执行失败"
+            exit 1
+          fi
