@@ -4,7 +4,7 @@ on:
   # 每15分钟执行一次（测试阶段推荐）
   schedule:
     - cron: "*/15 * * * *"  # 每15分钟执行一次
-  
+   
   # 允许手动触发（支持分支选择）
   workflow_dispatch:
     inputs:
@@ -22,7 +22,7 @@ on:
         required: false
         default: false
         type: boolean
-  
+   
   # 添加push触发，当相关文件变化时自动执行
   push:
     branches: [ main, master ]
@@ -205,6 +205,7 @@ print(json.dumps(info, indent=2, ensure_ascii=False))
           publish_branch: gh-pages
           commit_message: |
             Update configs
+            
             - Time: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
             - Workflow: ${{ github.workflow }} #${{ github.run_id }}
             - Trigger: ${{ github.event_name }}
@@ -243,4 +244,4 @@ print(json.dumps(info, indent=2, ensure_ascii=False))
           else
             echo "❌ 工作流执行失败"
             exit 1
-          
+          fi
