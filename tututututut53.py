@@ -10,11 +10,27 @@ import binascii
 import re
 import time
 import random
+import sys
+import datetime
 import hashlib
 import string
 import base64
 import os
-
+def debug_info():
+    """输出调试信息"""
+    info = {
+        "python_version": sys.version,
+        "current_directory": os.getcwd(),
+        "utc_time": str(datetime.datetime.utcnow()),
+        "local_time": str(datetime.datetime.now()),
+        "timezone": str(datetime.datetime.now().astimezone().tzinfo),
+        "environment_variables": {k: v for k, v in os.environ.items() if "PYTHON" in k or "PATH" in k}
+    }
+    
+    print("=== 调试信息 ===")
+    print(json.dumps(info, indent=2, ensure_ascii=False))
+    print("================")
+    
 # 安装命令：pip install pyaes pyyaml
 try:
     import pyaes
@@ -461,4 +477,6 @@ def main():
 
 if __name__ == "__main__":
     # 运行前请确保已安装: pip install requests pyaes pyyaml
+    debug_info()
+
     main()
