@@ -1,41 +1,107 @@
 name: Deploy Configs to GitHub Pages
 
 on:
+  # 改为每小时执行一次（避免过于频繁）
   schedule:
-    # 每分钟执行一次（测试用，正式环境建议改为每天一次）
-    - cron: "* * * * *"
+    - cron: "0 * * * *"  # 每小时整点执行
   # 允许手动触发
   workflow_dispatch:
+  # 添加push触发，当相关文件变化时自动执行
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'tututututut53.py'
+      - 'requirements.txt'
+      - '.github/workflows/**'
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 获取完整git历史
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
+          cache: "pip"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            echo "requirements.txt not found"
+          fi
+
+      - name: Debug environment info
+        run: |
+          echo "=== 环境信息 ==="
+          echo "Python版本: $(python --version)"
+          echo "工作目录: $(pwd)"
+          echo "UTC时间: $(date -u)"
+          echo "文件列表:"
+          ls -la
+          echo "=== requirements.txt 内容 ==="
+          if [ -f requirements.txt ]; then
+            cat requirements.txt
+          fi
 
       - name: Run script to generate configs
-        run: python tututututut53.py
+        env:
+          TZ: "UTC"  # 设置时区为UTC
+          PYTHONUNBUFFERED: "1"  # 实时输出日志
+        run: |
+          echo "开始执行配置生成脚本..."
+          python -c "
+import sys
+import datetime
+print(f'Python版本: {sys.version}')
+print(f'当前UTC时间: {datetime.datetime.utcnow()}')
+print(f'当前本地时间: {datetime.datetime.now()}')
+          "
+          python tututututut53.py
+          echo "脚本执行完成"
+
+      - name: Verify generated files
+        run: |
+          echo "=== 检查生成的文件 ==="
+          if [ -d "./docs" ]; then
+            echo "docs目录存在，内容如下:"
+            find ./docs -type f | head -20
+            echo "文件数量: $(find ./docs -type f | wc -l)"
+            # 显示文件修改时间
+            echo "最新文件:"
+            find ./docs -type f -exec ls -la {} \; | sort -k6,7 | tail -5
+          else
+            echo "错误: docs目录不存在!"
+            exit 1
+          fi
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
           publish_branch: gh-pages
-          commit_message: "Auto update configs: ${{ github.event.head_commit.message }}"
-          # 解决git操作失败问题
-          force_orphan: true
-          keep_files: false
+          # 使用实际时间作为提交信息
+          commit_message: "Update configs - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          # 保留提交历史，便于调试
+          force_orphan: false
           user_name: "github-actions[bot]"
           user_email: "github-actions[bot]@users.noreply.github.com"
+          # 允许空提交（如果没有变化）
+          allow_empty_commit: true
+
+      - name: Verify deployment
+        run: |
+          echo "部署完成!"
+          echo "部署时间: $(date -u)"
+          echo "你可以通过以下URL访问:"
+          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
