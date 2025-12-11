@@ -78,7 +78,7 @@ jobs:
       - name: Create environment info file
         run: |
           echo "生成环境信息..."
-          python -c "
+          cat > generate_info.py << 'EOF'
 import sys, os, platform, datetime, json, subprocess, pkg_resources
 
 info = {
@@ -113,8 +113,9 @@ except:
     info['packages'] = '无法获取包信息'
 
 print(json.dumps(info, indent=2, ensure_ascii=False))
-          " > environment_info.json
-          
+EOF
+          python generate_info.py > environment_info.json
+          rm generate_info.py
           echo "环境信息已保存到 environment_info.json"
 
       - name: Run script to generate configs
