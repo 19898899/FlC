@@ -3,7 +3,7 @@ name: Deploy Configs to GitHub Pages
 on:
   # 每15分钟执行一次（测试用）
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "*/3 * * * *"
   # 允许手动触发
   workflow_dispatch:
 
