@@ -5,26 +5,26 @@ mode: Rule
 log-level: info
 external-controller: 127.0.0.1:9090
 proxies:
-  - {name: "日本高速 1[普通]", server: 91.199.84.29, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 2[普通]", server: 92.223.121.228, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 3[普通]", server: 92.223.121.116, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 4[普通]", server: 92.223.121.15, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 5[普通]", server: 92.223.121.136, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 6[普通]", server: 45.135.228.101, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 7[普通]", server: 91.199.87.20, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 8[普通]", server: 94.177.131.207, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 9[普通]", server: 87.120.204.201, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 10[普通]", server: 87.120.204.241, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 11[普通]", server: 95.85.94.108, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 12[普通]", server: 95.85.94.231, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 13[普通]", server: 153.122.160.239, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 14[普通]", server: 153.122.172.144, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 15[普通]", server: 153.122.172.139, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "日本高速 16[普通]", server: 153.122.74.91, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "新加坡高速 17[普通]", server: 194.99.79.31, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "新加坡高速 18[普通]", server: 92.223.121.59, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "新加坡高速 19[普通]", server: 194.99.79.186, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
-  - {name: "新加坡高速 20[普通]", server: 194.99.79.62, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84490853:EoDRpa, obfs-param: ""}
+  - {name: "日本高速 1[普通]", server: 91.199.84.29, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 2[普通]", server: 92.223.121.228, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 3[普通]", server: 92.223.121.116, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 4[普通]", server: 92.223.121.15, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 5[普通]", server: 92.223.121.136, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 6[普通]", server: 45.135.228.101, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 7[普通]", server: 91.199.87.20, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 8[普通]", server: 94.177.131.207, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 9[普通]", server: 87.120.204.201, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 10[普通]", server: 87.120.204.241, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 11[普通]", server: 95.85.94.108, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 12[普通]", server: 95.85.94.231, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 13[普通]", server: 153.122.160.239, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 14[普通]", server: 153.122.172.144, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 15[普通]", server: 153.122.172.139, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "日本高速 16[普通]", server: 153.122.74.91, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "新加坡高速 17[普通]", server: 194.99.79.31, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "新加坡高速 18[普通]", server: 92.223.121.59, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "新加坡高速 19[普通]", server: 194.99.79.186, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
+  - {name: "新加坡高速 20[普通]", server: 194.99.79.62, port: 40155, type: ssr, cipher: chacha20, password: mPQ5C9, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: 84491426:J9BO1d, obfs-param: ""}
 proxy-groups:
   - name: 🔰 节点选择
     type: select
